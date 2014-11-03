@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Web Service Deployment in 2014 [En] - Jean-Luc&#8217;s Blog</title>
+  <meta name="author" content="Jean-Luc">
+
+  
+  <meta name="description" content="Here are some thoughts about deploying a web service or a web application today, in 2014. Let’s consider some expectations for the following roles: &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jlcanela.github.io/blog/2014/11/03/web-service-deployment-2014">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jean-Luc's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jean-Luc&#8217;s Blog</a></h1>
+  
+    <h2>An IT Blog.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jlcanela.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Web Service Deployment in 2014 [En]</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-03T02:27:22+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:27 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Here are some thoughts about deploying a web service or a web application today, in 2014.</p>
+
+<p>Let’s consider some expectations for the following roles:</p>
+
+<ul>
+<li>client : he expects the service to be reliable</li>
+<li>provider : he requires ease of deployment, ease of testing &amp; maintenance</li>
+</ul>
+
+
+<h2>Reliability</h2>
+
+<p>The 3 top issues are : </p>
+
+<ul>
+<li>service is not available (network) : we have to continuously check the service is available and fix the issue immediately. It can be a permanent or temporary network availability issue.</li>
+<li>service is slow or is returning errors : errors must be automatically detected, sysadmin must be notified immediately to take action</li>
+<li>service is returning incorrect result : current version of the service must have been validated by a QA team</li>
+</ul>
+
+
+<h2>Ease of deployment</h2>
+
+<p>For the service to be easy to deploy:</p>
+
+<ul>
+<li>deployment is done via a single deploy command</li>
+<li>deployment can made partially</li>
+<li>constant checking is done during deployment</li>
+<li>it’s always possible to come back</li>
+<li>deploy a server farm is as simple as deploying a single server</li>
+</ul>
+
+
+<h2>Ease of testing and no-longer-painful maintenance</h2>
+
+<p>Let’s imagine that:</p>
+
+<ul>
+<li>service execution data are collected and processed in realtime</li>
+<li>execution data is automatically analysed</li>
+<li>servers are automatically switched when necessary</li>
+<li>it’s easy to add new servers when service load is increasing</li>
+</ul>
+
+
+<p>I&rsquo;m preparing a serie of article about Mesos / Marathon. This platform,  maybe, is a good opportunity to move in this direction.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Luc</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-03T02:27:22+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:27 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jlcanela.github.io/blog/2014/11/03/web-service-deployment-2014/" data-via="" data-counturl="http://jlcanela.github.io/blog/2014/11/03/web-service-deployment-2014/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/13/nodejs-form/" title="Previous Post: NodeJS Form [FR]">&laquo; NodeJS Form [FR]</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/03/web-service-deployment-2014/">Web Service Deployment in 2014 [En]</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/nodejs-form/">NodeJS Form [FR]</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/26/quel-avenir-pour-scala-n-est-pas-la-question/">Quel Avenir Pour Scala ? N&#8217;est Pas La Question. [FR]</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Jean-Luc -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

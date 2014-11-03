@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://jlcanela.github.io/sitemap.xml 

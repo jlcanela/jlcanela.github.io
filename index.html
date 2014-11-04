@@ -248,7 +248,69 @@ Why is the task not started in the Marathon console ? 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>[To be continued]</p>
+<p>If we look at mesos console, we can see that the Framework is staging and repetedly failing:
+<img src="/images/marathon_task_staging.png" title="Staging task" alt="Staging task" /></p>
+
+<p>But if we have a look at the Failed task error log, it&rsquo;s clearer:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>WARNING: Logging before InitGoogleLogging<span class="o">()</span> is written to STDERR
+</span><span class='line'>I1104 16:52:49.402339 <span class="m">37630720</span> fetcher.cpp:76<span class="o">]</span> Fetching URI <span class="s1">&#39;http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar&#39;</span>
+</span><span class='line'>I1104 16:52:49.403532 <span class="m">37630720</span> fetcher.cpp:126<span class="o">]</span> Downloading <span class="s1">&#39;http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar&#39;</span> to <span class="s1">&#39;/tmp/mesos/slaves/20141104-103858-16777343-5050-9421-0/frameworks/20140902-013203-16777343-5050-4471-0000/executors/sws3.a09d4717-643a-11e4-bf70-e0f84706f8b6/runs/4209c508-40b7-4660-8c15-6b8a1a5dbe23/spray-test-assembly-0.1.jar&#39;</span>
+</span><span class='line'>E1104 16:52:49.404134 <span class="m">37630720</span> fetcher.cpp:129<span class="o">]</span> Error downloading resource: Couldn<span class="s1">&#39;t connect to server</span>
+</span><span class='line'><span class="s1">Failed to fetch: http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar</span>
+</span><span class='line'><span class="s1">Failed to synchronize with slave (it&#39;</span>s probably exited<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So enable the repository and we finally get a running task: 
+<img src="/images/marathon_task_running.png" title="Running task" alt="Running task" /></p>
+
+<h3>Not providing the uris correctly</h3>
+
+<p>Marathon is expecting the parameter <em>&ldquo;uris&rdquo;: [ &ldquo;<a href="http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar">http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar</a>&rdquo; ]</em>. What happen if we try to use the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -d <span class="s1">&#39;{ &quot;id&quot;: &quot;sws2&quot;, &quot;cmd&quot;: &quot;java -jar spray-test-assembly-0.1.jar $PORT&quot;, &quot;mem&quot;: 256.0, &quot;instances&quot;: 1, &quot;uri&quot;: &quot;http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar&quot; }&#39;</span> http://127.0.0.1:8080/v2/apps
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Marathon console shows the task is switching between STAGING and FAILED states.</p>
+
+<p>When we check the framework error log:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>I1104 17:08:07.138018 <span class="m">125543168</span> exec.cpp:132<span class="o">]</span> Version: 0.20.0
+</span><span class='line'>I1104 17:08:07.139219 <span class="m">184311808</span> exec.cpp:206<span class="o">]</span> Executor registered on slave 20141104-103858-16777343-5050-9421-0
+</span><span class='line'>Error: Unable to access jarfile spray-test-assembly-0.1.jar
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we check the Framework STDOUT:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Registered executor on 172.16.0.17
+</span><span class='line'>Starting task sws2.c368adc6-643c-11e4-bf70-e0f84706f8b6
+</span><span class='line'>sh -c <span class="s1">&#39;java -jar spray-test-assembly-0.1.jar $PORT&#39;</span>
+</span><span class='line'>Forked <span class="nb">command </span>at 17152
+</span><span class='line'>Command exited with status <span class="m">1</span> <span class="o">(</span>pid: 17152<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>No file is downloaded nor installed. The task is starting fine, but the java process terminates with status = 1 as the jarfile is not downloaded.</p>
+
+<p><strong>Important</strong>: Always use a <em>&ldquo;uris&rdquo; : [ &ldquo;url1&rdquo; ]</em> syntax.  </p>
 </div>
   
   

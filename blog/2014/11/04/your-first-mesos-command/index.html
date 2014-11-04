@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Your First Mesos Command [En] - Jean-Luc&#8217;s Blog</title>
+  <meta name="author" content="Jean-Luc">
+
+  
+  <meta name="description" content="First setup the basic thing in local, and then run our first mesos command. Basic setup If you&rsquo;re an OS X user, you can install according to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jlcanela.github.io/blog/2014/11/04/your-first-mesos-command">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jean-Luc's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jean-Luc&#8217;s Blog</a></h1>
+  
+    <h2>An IT Blog.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jlcanela.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Your First Mesos Command [En]</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-04T10:27:22+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:27 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>First setup the basic thing in local, and then run our first mesos command.</p>
+
+<h2>Basic setup</h2>
+
+<p>If you&rsquo;re an OS X user, you can install according to the documentation <a href="http://mesosphere.com/docs/getting-started/developer/brew-install/">http://mesosphere.com/docs/getting-started/developer/brew-install/</a> which is very didactic. <a href="http://mesosphere.com/docs/guides/">http://mesosphere.com/docs/guides/</a> contains a lot of useful information.</p>
+
+<p>So once it&rsquo;s installed :</p>
+
+<ul>
+<li>Zookeeper is installed and started</li>
+</ul>
+
+
+<h2>Starting the services</h2>
+
+<p>First, let’s check that Zookeeper is started:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>jps <span class="p">|</span> grep QuorumPeerMain
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>if no process is listed, please check your Zookeeper setup.</p>
+
+<p>Start the mesos master:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/local/sbin/mesos-master --registry<span class="o">=</span>in_memory --ip<span class="o">=</span>127.0.0.1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Start the mesos slave:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo /usr/local/sbin/mesos-slave --master<span class="o">=</span>127.0.0.1:5050
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check the services are ok:</p>
+
+<ul>
+<li>The Mesos console must be active at <a href="http://127.0.0.1:5050/#/">http://127.0.0.1:5050/#/</a>
+At least one slave is activated
+<img src="/images/mesos_console.png" title="Mesos console" alt="Mesos Console" /></li>
+</ul>
+
+
+<h2>Start a simple mesos command</h2>
+
+<p>Let&rsquo;s execute a simple <em>ls</em> command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mesos execute --master<span class="o">=</span>127.0.0.1:5050 --name<span class="o">=</span>Command --command<span class="o">=</span><span class="s2">&quot;ls&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Where to find logs</h2>
+
+<p>Then go to the Mesos console and click on <strong>Framework</strong>.</p>
+
+<p>The Framework view is displayed:
+<img src="/images/mesos_framework_view.png" title="Mesos Framework View" alt="Mesos Framework View" /></p>
+
+<p>Then click in the Terminated framework link like <strong>…5050-9877-0000</strong>.</p>
+
+<p>The Framework detail is displayed:
+<img src="/images/mesos_framework_detail.png" title="Mesos Framework Detail" alt="Mesos Framework Detail" /></p>
+
+<p>Then click the sandbox link.
+The sandbox window is opened:
+<img src="/images/mesos_sandbox.png" title="Sandbox window" alt="Sandbox window" /></p>
+
+<p>Click the stdout link, the following log is displayed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Registered executor on 172.16.0.17
+</span><span class='line'>Starting task Command
+</span><span class='line'>sh -c <span class="s1">&#39;ls&#39;</span>
+</span><span class='line'>Forked <span class="nb">command </span>at 10500
+</span><span class='line'>stderr
+</span><span class='line'>stdout
+</span><span class='line'>Command exited with status <span class="m">0</span> <span class="o">(</span>pid: 10500<span class="o">)</span>
+</span><span class='line'>Shutting down
+</span><span class='line'>Sending SIGTERM to process tree at pid 10500
+</span><span class='line'>Killing the following process trees:
+</span><span class='line'><span class="o">[</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Important</strong> : the mesos console is your best friend, when something is wrong, always try to puzzle out the error logs accessible through the mesos framework view.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Luc</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-04T10:27:22+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:27 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jlcanela.github.io/blog/2014/11/04/your-first-mesos-command/" data-via="" data-counturl="http://jlcanela.github.io/blog/2014/11/04/your-first-mesos-command/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/03/web-service-deployment-2014/" title="Previous Post: Web service deployment in 2014 [EN]">&laquo; Web service deployment in 2014 [EN]</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/11/04/starting-marathon/" title="Next Post: Starting Marathon [EN]">Starting Marathon [EN] &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/04/starting-marathon/">Starting Marathon [En]</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/04/your-first-mesos-command/">Your First Mesos Command [En]</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/03/web-service-deployment-2014/">Web Service Deployment in 2014 [En]</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/26/quel-avenir-pour-scala-n-est-pas-la-question/">Quel Avenir Pour Scala ? N&#8217;est Pas La Question. [FR]</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Jean-Luc -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

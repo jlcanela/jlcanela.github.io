@@ -4,7 +4,7 @@
   <title><![CDATA[Jean-Luc's Blog]]></title>
   <link href="http://jlcanela.github.io/atom.xml" rel="self"/>
   <link href="http://jlcanela.github.io/"/>
-  <updated>2014-11-03T11:42:21+01:00</updated>
+  <updated>2014-11-04T11:53:46+01:00</updated>
   <id>http://jlcanela.github.io/</id>
   <author>
     <name><![CDATA[Jean-Luc]]></name>
@@ -12,6 +12,288 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Starting Marathon [En]]]></title>
+    <link href="http://jlcanela.github.io/blog/2014/11/04/starting-marathon/"/>
+    <updated>2014-11-04T11:27:22+01:00</updated>
+    <id>http://jlcanela.github.io/blog/2014/11/04/starting-marathon</id>
+    <content type="html"><![CDATA[<p>First setup the basic thing in local, and then run our first mesos command.</p>
+
+<h2>Basic setup</h2>
+
+<p>One can download Marathon directly from the website <a href="https://mesosphere.github.io/marathon/.">https://mesosphere.github.io/marathon/.</a></p>
+
+<p>Let&rsquo;s deploy Marathon in ~/apps/marathon-0.6.0</p>
+
+<h2>Starting the services</h2>
+
+<p>Start the marathon server:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/apps/marathon-0.6.0 <span class="o">&amp;&amp;</span> <span class="nv">MESOS_NATIVE_LIBRARY</span><span class="o">=</span><span class="s1">&#39;/usr/local/lib/libmesos.dylib&#39;</span> ./bin/start --master localhost:5050 --zk zk://localhost:2181/marathon
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check the services are ok:</p>
+
+<ul>
+<li>Marathon console is enabled at <a href="http://localhost:8080/">http://localhost:8080/</a>
+We should have no active marathon service
+<img src="http://jlcanela.github.io/images/marathon_console.png" title="Marathon console" alt="Marathon Console" /></li>
+</ul>
+
+
+<h2>Repository</h2>
+
+<p>To deploy the same application in multiple nodes, an easy way is a shared repository.
+Each version of the app and its dependencies must be available in the Deployment Repository.</p>
+
+<p>Here is a simple structure for a Simple Web Service called SWS :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>└── SWS
+</span><span class='line'>    ├── v1-first_revision
+</span><span class='line'>    │   └── spray-test-assembly-0.1.jar
+</span><span class='line'>    ├── v2-bug_included
+</span><span class='line'>    │   └── my_app_v1.1.jar
+</span><span class='line'>    └── v3-bug_fixed
+</span><span class='line'>        └── my_app_v1.2.jar
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The easy step to deploy this repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone <span class="o">(</span>**TODO : create a git repository **<span class="o">)</span>
+</span><span class='line'><span class="nb">cd </span>dm_app_repository
+</span><span class='line'>python -m SimpleHTTPServer
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check the repository is available: </p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>curl http://127.0.0.1:8000/SWS/
+</span><span class='line'>&lt;!DOCTYPE html PUBLIC <span class="s2">&quot;-//W3C//DTD HTML 3.2 Final//EN&quot;</span>&gt;&lt;html&gt;
+</span><span class='line'>&lt;title&gt;Directory listing <span class="k">for</span> /SWS/&lt;/title&gt;
+</span><span class='line'><span class="o">[</span>…<span class="o">]</span>
+</span><span class='line'>&lt;li&gt;&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;v1-first_revision/&quot;</span>&gt;v1-first_revision/&lt;/a&gt;
+</span><span class='line'>&lt;li&gt;&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;v2-bug_included/&quot;</span>&gt;v2-bug_included/&lt;/a&gt;
+</span><span class='line'>&lt;li&gt;&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;v3-bug_fixed/&quot;</span>&gt;v3-bug_fixed/&lt;/a&gt;
+</span><span class='line'><span class="o">[</span>…<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Test the application locally:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>curl -o spray-test-assembly-0.1.jar http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar
+</span><span class='line'>java -jar spray-test-assembly-0.1.jar 8091
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Open a browser at <a href="http://127.0.0.1:8091/,">http://127.0.0.1:8091/,</a> you should see an <em>hello</em> message.</p>
+
+<h2>Deploy with Marathon</h2>
+
+<p>We ready to start playing with Marathon. Let’s deploy our first app server with Marathon:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -d <span class="s1">&#39;{ &quot;id&quot;: &quot;sws1&quot;, &quot;cmd&quot;: &quot;java -jar spray-test-assembly-0.1.jar $PORT&quot;, &quot;mem&quot;: 256.0, &quot;instances&quot;: 1, &quot;uris&quot;: [ &quot;http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar&quot; ]}&#39;</span> http://127.0.0.1:8080/v2/apps
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can access directly the service from Marathon console.</p>
+
+<p>If we need to deploy a second instance:</p>
+
+<ul>
+<li>go to marathon console at <a href="http://127.0.0.1:8080/,">http://127.0.0.1:8080/,</a> the console is displayed
+<img src="http://jlcanela.github.io/images/marathon_console_app.png" title="Marathon Console" alt="Marathon Console" /></li>
+<li>click the scale button, the scale window is displayed
+<img src="http://jlcanela.github.io/images/marathon_scale_window.png" title="Scale Window" alt="Scale Window" /></li>
+<li>select 2 instances and press OK, the marathon console is updated with 2 instances
+<img src="http://jlcanela.github.io/images/marathon_updated_servers.png" title="Marathon Console with 2 instances" alt="Marathon Console with 2 instances" /></li>
+</ul>
+
+
+<h2>Troubleshooting</h2>
+
+<h3>task identifier does not support uppercase</h3>
+
+<p>Let&rsquo;s use an UPPERCASE identifier (SWS1), starting the task with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -d <span class="s1">&#39;{ &quot;id&quot;: &quot;SWS1&quot;, &quot;cmd&quot;: &quot;java -jar spray-test-assembly-0.1.jar $PORT&quot;, &quot;mem&quot;: 256.0, &quot;instances&quot;: 1, &quot;uris&quot;: [ &quot;http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar&quot; ]}&#39;</span> http://127.0.0.1:8080/v2/apps
+</span><span class='line'><span class="o">{</span><span class="s2">&quot;errors&quot;</span>:<span class="o">[{</span><span class="s2">&quot;attribute&quot;</span>:<span class="s2">&quot;id&quot;</span>,<span class="s2">&quot;error&quot;</span>:<span class="s2">&quot;must match \”^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$\&quot;&quot;</span><span class="o">}]}</span>%
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>OK, we should have been used <em>sws1</em> as task indentifier.</p>
+
+<h3>repository is down when starting a task</h3>
+
+<p>(we have killed the repository, or the python server process in this case).</p>
+
+<p>Start the task with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -d <span class="s1">&#39;{ &quot;id&quot;: &quot;sws3&quot;, &quot;cmd&quot;: &quot;java -jar spray-test-assembly-0.1.jar $PORT&quot;, &quot;mem&quot;: 256.0, &quot;instances&quot;: 1, &quot;uris&quot;: [&quot;http://127.0.0.1:8000/SWS/v1-first_revision/spray-test-assembly-0.1.jar&quot;] }&#39;</span> http://127.0.0.1:8080/v2/apps
+</span><span class='line'>null%
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&ldquo;null%&rdquo;, so no error. everything looks good. Right ? Hmm. No.
+Why is the task not started in the Marathon console ? 
+<img src="http://jlcanela.github.io/images/marathon_unstarted_task.png" title="Unstarted task" alt="Unstarted task" /></p>
+
+<p>If we have a look at Marathon console logs, no details: </p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>2014-11-04 11:43:47,195<span class="o">]</span> INFO Assigned some ports <span class="k">for</span> sws3: <span class="o">[</span>0<span class="o">]</span> -&gt; <span class="o">[</span>15603<span class="o">]</span> <span class="o">(</span>mesosphere.marathon.MarathonSchedulerService:78<span class="o">)</span>
+</span><span class='line'><span class="o">[</span>2014-11-04 11:43:47,365<span class="o">]</span> INFO Starting app sws3 <span class="o">(</span>mesosphere.marathon.MarathonScheduler:223<span class="o">)</span>
+</span><span class='line'><span class="o">[</span>2014-11-04 11:43:47,371<span class="o">]</span> INFO Need to scale sws3 from <span class="m">0</span> up to <span class="m">1</span> instances <span class="o">(</span>mesosphere.marathon.MarathonScheduler:338<span class="o">)</span>
+</span><span class='line'><span class="o">[</span>2014-11-04 11:43:47,371<span class="o">]</span> INFO Queueing <span class="m">1</span> new tasks <span class="k">for</span> sws3 <span class="o">(</span><span class="m">0</span> queued<span class="o">)</span> <span class="o">(</span>mesosphere.marathon.MarathonScheduler:344<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>[To be continued]</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Your First Mesos Command [En]]]></title>
+    <link href="http://jlcanela.github.io/blog/2014/11/04/your-first-mesos-command/"/>
+    <updated>2014-11-04T10:27:22+01:00</updated>
+    <id>http://jlcanela.github.io/blog/2014/11/04/your-first-mesos-command</id>
+    <content type="html"><![CDATA[<p>First setup the basic thing in local, and then run our first mesos command.</p>
+
+<h2>Basic setup</h2>
+
+<p>If you&rsquo;re an OS X user, you can install according to the documentation <a href="http://mesosphere.com/docs/getting-started/developer/brew-install/">http://mesosphere.com/docs/getting-started/developer/brew-install/</a> which is very didactic. <a href="http://mesosphere.com/docs/guides/">http://mesosphere.com/docs/guides/</a> contains a lot of useful information.</p>
+
+<p>So once it&rsquo;s installed :</p>
+
+<ul>
+<li>Zookeeper is installed and started</li>
+</ul>
+
+
+<h2>Starting the services</h2>
+
+<p>First, let’s check that Zookeeper is started:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>jps <span class="p">|</span> grep QuorumPeerMain
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>if no process is listed, please check your Zookeeper setup.</p>
+
+<p>Start the mesos master:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/local/sbin/mesos-master --registry<span class="o">=</span>in_memory --ip<span class="o">=</span>127.0.0.1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Start the mesos slave:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo /usr/local/sbin/mesos-slave --master<span class="o">=</span>127.0.0.1:5050
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check the services are ok:</p>
+
+<ul>
+<li>The Mesos console must be active at <a href="http://127.0.0.1:5050/#/">http://127.0.0.1:5050/#/</a>
+At least one slave is activated
+<img src="http://jlcanela.github.io/images/mesos_console.png" title="Mesos console" alt="Mesos Console" /></li>
+</ul>
+
+
+<h2>Start a simple mesos command</h2>
+
+<p>Let&rsquo;s execute a simple <em>ls</em> command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mesos execute --master<span class="o">=</span>127.0.0.1:5050 --name<span class="o">=</span>Command --command<span class="o">=</span><span class="s2">&quot;ls&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Where to find logs</h2>
+
+<p>Then go to the Mesos console and click on <strong>Framework</strong>.</p>
+
+<p>The Framework view is displayed:
+<img src="http://jlcanela.github.io/images/mesos_framework_view.png" title="Mesos Framework View" alt="Mesos Framework View" /></p>
+
+<p>Then click in the Terminated framework link like <strong>…5050-9877-0000</strong>.</p>
+
+<p>The Framework detail is displayed:
+<img src="http://jlcanela.github.io/images/mesos_framework_detail.png" title="Mesos Framework Detail" alt="Mesos Framework Detail" /></p>
+
+<p>Then click the sandbox link.
+The sandbox window is opened:
+<img src="http://jlcanela.github.io/images/mesos_sandbox.png" title="Sandbox window" alt="Sandbox window" /></p>
+
+<p>Click the stdout link, the following log is displayed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Registered executor on 172.16.0.17
+</span><span class='line'>Starting task Command
+</span><span class='line'>sh -c <span class="s1">&#39;ls&#39;</span>
+</span><span class='line'>Forked <span class="nb">command </span>at 10500
+</span><span class='line'>stderr
+</span><span class='line'>stdout
+</span><span class='line'>Command exited with status <span class="m">0</span> <span class="o">(</span>pid: 10500<span class="o">)</span>
+</span><span class='line'>Shutting down
+</span><span class='line'>Sending SIGTERM to process tree at pid 10500
+</span><span class='line'>Killing the following process trees:
+</span><span class='line'><span class="o">[</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Important</strong> : the mesos console is your best friend, when something is wrong, always try to puzzle out the error logs accessible through the mesos framework view.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Web Service Deployment in 2014 [En]]]></title>

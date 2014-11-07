@@ -4,7 +4,7 @@
   <title><![CDATA[Jean-Luc's Blog]]></title>
   <link href="http://jlcanela.github.io/atom.xml" rel="self"/>
   <link href="http://jlcanela.github.io/"/>
-  <updated>2014-11-07T11:02:45+01:00</updated>
+  <updated>2014-11-07T11:12:12+01:00</updated>
   <id>http://jlcanela.github.io/</id>
   <author>
     <name><![CDATA[Jean-Luc]]></name>
@@ -271,6 +271,7 @@ Why is the task not started in the Marathon console ? 
 <p><strong>Important</strong>:</p>
 
 <ul>
+<li>Be sure you know how access the mesos logs : without them, you&rsquo;re lost</li>
 <li>Make sure you repository is accessible from all the nodes</li>
 <li>Always use a <em>&ldquo;uris&rdquo; : [ &ldquo;url1&rdquo; ]</em> syntax.  </li>
 <li>Always ensure the *nix accounts are created on all the slave nodes</li>

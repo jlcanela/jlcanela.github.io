@@ -4,7 +4,7 @@
   <title><![CDATA[Jean-Luc's Blog]]></title>
   <link href="http://jlcanela.github.io/atom.xml" rel="self"/>
   <link href="http://jlcanela.github.io/"/>
-  <updated>2014-11-04T17:14:29+01:00</updated>
+  <updated>2014-11-07T11:02:45+01:00</updated>
   <id>http://jlcanela.github.io/</id>
   <author>
     <name><![CDATA[Jean-Luc]]></name>
@@ -18,7 +18,7 @@
     <link href="http://jlcanela.github.io/blog/2014/11/04/starting-marathon/"/>
     <updated>2014-11-04T11:27:22+01:00</updated>
     <id>http://jlcanela.github.io/blog/2014/11/04/starting-marathon</id>
-    <content type="html"><![CDATA[<p>First setup the basic thing in local, and then run our first mesos command.</p>
+    <content type="html"><![CDATA[<p>Let&rsquo;s start our first Marathon service and then present some common pitfalls in the troubleshooting section.</p>
 
 <h2>Basic setup</h2>
 
@@ -241,7 +241,41 @@ Why is the task not started in the Marathon console ? 
 
 <p>No file is downloaded nor installed. The task is starting fine, but the java process terminates with status = 1 as the jarfile is not downloaded.</p>
 
-<p><strong>Important</strong>: Always use a <em>&ldquo;uris&rdquo; : [ &ldquo;url1&rdquo; ]</em> syntax.  </p>
+<h3>An invalid command</h3>
+
+<p>Let&rsquo;s use the (in)famous <em>blah</em> command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -d <span class="s1">&#39;{ &quot;id&quot;: &quot;err&quot;, &quot;cmd&quot;: &quot;blah&quot;, &quot;mem&quot;: 256.0, &quot;instances&quot;: 1 }&#39;</span> http://127.0.0.1:8080/v2/apps
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the Mesos console we get</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>I1107 10:40:25.843163 <span class="m">2021741312</span> exec.cpp:132<span class="o">]</span> Version: 0.20.0
+</span><span class='line'>I1107 10:40:25.844281 <span class="m">217133056</span> exec.cpp:206<span class="o">]</span> Executor registered on slave 20141107-103704-16777343-5050-4138-0
+</span><span class='line'>sh: blah: <span class="nb">command </span>not found
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There is another variant when we execute the task in another node : Marathon try to start the task with the same user as the current user having started the Marathon process. If it does not exist in the slave node, we get something like :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>E0904 00:25:34.097573 <span class="m">147271680</span> slave.cpp:2484<span class="o">]</span> Container <span class="s1">&#39;c6d1a64f-1fd9-48e6-9fea-32bc794b508c&#39;</span> <span class="k">for</span> executor <span class="s1">&#39;webtest2.38a08eb7-33b9-11e4-b27e-e0f84706f8b6&#39;</span> of framework <span class="s1">&#39;20140902-013203-16777343-5050-4471-0000&#39;</span> failed to start: Failed to redirect stdout: Failed to chown: Failed to get user information <span class="k">for</span> <span class="s1">&#39;jlcanela&#39;</span>: Undefined error: 0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Important</strong>:</p>
+
+<ul>
+<li>Make sure you repository is accessible from all the nodes</li>
+<li>Always use a <em>&ldquo;uris&rdquo; : [ &ldquo;url1&rdquo; ]</em> syntax.  </li>
+<li>Always ensure the *nix accounts are created on all the slave nodes</li>
+</ul>
+
 ]]></content>
   </entry>
   
